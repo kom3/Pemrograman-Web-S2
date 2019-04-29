@@ -18,6 +18,11 @@ if (!file_exists(BASE_FOLDER)) {
 }
 
 $root = '';
+$sort = 1; // -1 for DESC, 1 for ASC
+
+if (!empty($_SESSION['sort'])) {
+    $sort = $_SESSION['sort'];
+}
 
 if ($locked == false) {
     
@@ -240,7 +245,7 @@ if ($locked == false) {
                                             <h4><strong>Protected Mode</strong></h4>
                                             <p>Resource yang akan kamu akses berada pada mode terkunci, masukkan kunci keamanan kamu untuk membuka resource</p>
                                             <div class="input-group">                     
-                                                <input type="password" name="unlock" class="form-control" placeholder="Masukkan password disini">
+                                                <input type="password" name="unlock" class="form-control" placeholder="Masukkan password disini" autofocus="true">
                                                 <span class="input-group-btn">
                                                     <button type="submit" class="btn btn-primary">Unlock!</button>
                                                 </span>
@@ -351,6 +356,23 @@ if ($locked == false) {
                                             <a href="#" class="btn btn-sm btn-primary" id="act-duplicate" disabled><i class="fa fa-files-o"></i> Duplicate</a>
                                             <a href="#" class="btn btn-sm btn-primary" id="act-download" disabled><i class="fa fa-download"></i> Download Berkas</a>
                                             <a href="#" class="btn btn-sm btn-primary" id="act-enter" disabled><i class="fa fa-external-link-square"></i> Enter</a>
+                                            
+                                            <div class="pull-right">
+                                                <div class="dropdown" style="display: inline-block;">
+                                                    <button class="btn btn-default btn-sm dropdown-toggle" type="button" id="sortDown" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
+                                                        <i class="fa fa-sort" aria-hidden="true"></i> Default
+                                                    </button>
+                                                    <ul class="dropdown-menu" aria-labelledby="sortDown">
+                                                        <li><a href="#">Nama</a></li>
+                                                        <li><a href="#">Terakhir Diubah</a></li>
+                                                        <li><a href="#">Type</a></li>
+                                                        <li><a href="#">Ukuran</a></li>
+                                                        <li role="separator" class="divider"></li>
+                                                        <li><a href="#">Default</a></li>
+                                                    </ul>
+                                                </div>
+                                                <button class="btn btn-default btn-sm"><i class="fa fa-sort-amount-asc" aria-hidden="true"></i> ASC</button>
+                                            </div>
 
                                             <form id="form-rename" action="<?php echo $current_path; ?>" method="POST" style="display: none;">
                                                 <input type="hidden" name="path" value="">
@@ -479,10 +501,10 @@ if ($locked == false) {
                                                         }
                                                     }
 
-                                                    echo '<tr class="not-found" style="display: none;"><td colspan="5">Tidak ada berkas atau folder yang dapat ditampilkan.</td></tr>';
+                                                    echo '<tr class="not-found" style="display: none;"><td colspan="7">Tidak ada berkas atau folder yang dapat ditampilkan.</td></tr>';
 
                                                     if ($row === 0) {
-                                                        echo '<tr><td colspan="5">Tidak ada berkas atau folder yang dapat ditampilkan.</td></tr>';
+                                                        echo '<tr><td colspan="7">Tidak ada berkas atau folder yang dapat ditampilkan.</td></tr>';
                                                     }
                                                     ?>
                                                 </tbody>
