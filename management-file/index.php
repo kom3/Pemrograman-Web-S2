@@ -171,8 +171,35 @@ if ($locked == false) {
         closedir($handle);
     }
 
-    sort($dir_listing['folder']);
-    sort($dir_listing['file']);
+    $sort = 'asc';
+
+    if (!empty($_GET['sort'])) {
+        $setcokt = 'desc';
+
+        if (!empty($_COOKIE['sort'])) {
+            if ($_COOKIE['sort'] == 'asc') $setcokt = 'desc';
+            else $setcokt = 'asc';
+        }
+        
+        setcookie('sort', $setcokt, 0);
+
+        header('Location: index.php'); exit;
+    }
+
+    if (isset($_COOKIE['sort']) && in_array($_COOKIE['sort'], ['asc', 'desc'])) {
+        $sort = $_COOKIE['sort'];
+    }
+
+    switch ($sort) {
+        case 'asc':
+            sort($dir_listing['folder']);
+            sort($dir_listing['file']);
+        break;
+        case 'desc':
+            rsort($dir_listing['folder']);
+            rsort($dir_listing['file']);
+        break;
+    }
 
     $current_path = 'index.php?p=' . (!empty($_GET['p']) ? $_GET['p'] : '/');
 
@@ -358,20 +385,7 @@ if ($locked == false) {
                                             <a href="#" class="btn btn-sm btn-primary" id="act-enter" disabled><i class="fa fa-external-link-square"></i> Enter</a>
                                             
                                             <div class="pull-right">
-                                                <div class="dropdown" style="display: inline-block;">
-                                                    <button class="btn btn-default btn-sm dropdown-toggle" type="button" id="sortDown" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
-                                                        <i class="fa fa-sort" aria-hidden="true"></i> Default
-                                                    </button>
-                                                    <ul class="dropdown-menu" aria-labelledby="sortDown">
-                                                        <li><a href="#">Nama</a></li>
-                                                        <li><a href="#">Terakhir Diubah</a></li>
-                                                        <li><a href="#">Type</a></li>
-                                                        <li><a href="#">Ukuran</a></li>
-                                                        <li role="separator" class="divider"></li>
-                                                        <li><a href="#">Default</a></li>
-                                                    </ul>
-                                                </div>
-                                                <button class="btn btn-default btn-sm"><i class="fa fa-sort-amount-asc" aria-hidden="true"></i> ASC</button>
+                                                <a class="btn btn-default btn-sm" href="?sort=1"><i class="fa fa-sort-amount-<?=($sort=='asc') ? 'asc' : 'desc'; ?>" aria-hidden="true"></i> <?=strtoupper($sort);?></a>
                                             </div>
 
                                             <form id="form-rename" action="<?php echo $current_path; ?>" method="POST" style="display: none;">
