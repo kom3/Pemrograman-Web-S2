@@ -3,11 +3,11 @@
 session_start();
 
 $protected_mode = true;
-$protected_key = "123456";
+$protected_key = "01ddae4032e17a1c338baac9c4322b30";
 
 $locked = true;
 
-if ((!empty($_SESSION['unlocked']) && $_SESSION['unlocked'] == $protected_key) || $protected_mode == false) {
+if ((!empty($_SESSION['unlocked']) && md5($_SESSION['unlocked']) == $protected_key) || $protected_mode == false) {
     $locked = false;
 }
 
@@ -186,8 +186,8 @@ if ($locked == false) {
         }
     }
 } else {
-    if (!empty($_POST['unlock']) && $_POST['unlock'] == $protected_key) {
-        $_SESSION['unlocked'] = $protected_key;
+    if (!empty($_POST['unlock']) && md5($_POST['unlock']) == $protected_key) {
+        $_SESSION['unlocked'] = $_POST['unlock'];
 
         header("Location: index.php"); exit;
     }
